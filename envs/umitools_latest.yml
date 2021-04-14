@@ -1,0 +1,6 @@
+name: umitools_env
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - umi_tools=1.0.1

@@ -1,0 +1,10 @@
+name: STARRSeq2MPRAnalyze_env
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - cutadapt=1.18
+  - pandaseq=2.11
+  - samtools=1.4.1
+  - trim-galore=0.6.6
+  - bwa=0.7.17
