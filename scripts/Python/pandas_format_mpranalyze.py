@@ -18,17 +18,17 @@ IF THERE'S A BETTER WAY, PLEASE LET ME KNOW!
 """
 
 # Parser Commands # ------------------------------------------------------------------------
-# parser = argparse.ArgumentParser(description='Inputs/Output for processing UMI files.')
-# requiredNamed = parser.add_argument_group('Required named arguments')
-# requiredNamed.add_argument('-d', '--directory', type=str, help='Directory to pipeline_input', required=True)
-# requiredNamed.add_argument('-o', '--outputdir', type=str, help='Output Directory)', required=True)
-# args = parser.parse_args()
-#
-# input_dir = args.directory
-# output_dir = args.outputdir
+parser = argparse.ArgumentParser(description='Inputs/Output for processing UMI files.')
+requiredNamed = parser.add_argument_group('Required named arguments')
+requiredNamed.add_argument('-d', '--directory', type=str, help='Directory to pipeline_input', required=True)
+requiredNamed.add_argument('-o', '--outputdir', type=str, help='Output Directory)', required=True)
+args = parser.parse_args()
 
-input_dir = "../../pipeline_output/12_pandas_processed"
-output_dir = "../../pipeline_output/13_final_mpranalyze_input"
+input_dir = args.directory
+output_dir = args.outputdir
+
+# input_dir = "../../pipeline_output/12_pandas_processed"
+# output_dir = "../../pipeline_output/13_final_mpranalyze_input"
 
 
 # START FUNCTIONS # ------------------------------------------------------------------------
