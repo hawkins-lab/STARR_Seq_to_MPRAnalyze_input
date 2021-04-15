@@ -31,7 +31,6 @@ scripts_dir = args.scripts
 
 # SORT INTO RNA OR DNA LIST
 def split_to_DNA_RNA(lst):
-
     RNA_lst, DNA_lst = [], []
     for name in lst:
 
@@ -54,7 +53,6 @@ def split_to_DNA_RNA(lst):
 
 # COPIES FILES AND MOVES THEM TO A NEW DIRECTORY
 def copy_files_new_dir(lst, nt_type):
-
     # Check if directories exist, if not, make them
     if not os.path.exists(f'{output_dir}/01_sorted_files'):
         os.mkdir(f'{output_dir}/01_sorted_files')
@@ -65,13 +63,15 @@ def copy_files_new_dir(lst, nt_type):
         exit()
 
     # Make new directories
-    for i in range(0,int(len(lst)/2)):
-        if not os.path.exists(f'{output_dir}/01_sorted_files/{nt_type}_{i+1}'):
+    for i in range(0, int(len(lst) / 2)):
+        if not os.path.exists(f'{output_dir}/01_sorted_files/{nt_type}_{i + 1}'):
             os.mkdir(f'{output_dir}/01_sorted_files/{nt_type}_{i + 1}')
 
     # Copying Files to new directory
     counter = 1
     for i in range(0, len(lst) - 1):
+
+        print("Counter: ", i)
 
         # Check current and next file names
         curr_name = lst[i].split('_')[0]
@@ -83,12 +83,15 @@ def copy_files_new_dir(lst, nt_type):
         # Move file to new directory
         if curr_name == next_name:
             shutil.copyfile(f'{input_dir}/{lst[i]}', f'{output_dir}/01_sorted_files/{nt_type}_{counter}/{lst[i]}')
-            shutil.copyfile(f'{input_dir}/{lst[i+1]}', f'{output_dir}/01_sorted_files/{nt_type}_{counter}/{lst[i+1]}')
+            shutil.copyfile(f'{input_dir}/{lst[i + 1]}',
+                            f'{output_dir}/01_sorted_files/{nt_type}_{counter}/{lst[i + 1]}')
 
             # qsub another script
+            print(f"Submitted {name_2}.")
             os.system(f"qsub {scripts_dir}/Shell/pipeline.sh {output_dir} {nt_type} {counter} {name_2}")
 
             counter += 1
+            continue
 
 
 def main():
@@ -98,9 +101,13 @@ def main():
     # Split list into DNA or RNA
     DNA_lst, RNA_lst = split_to_DNA_RNA(filename_lst)
 
+    # Need to sort here or downstream won't work on Linux
+    DNA_lst_sorted = sorted(DNA_lst)
+    RNA_lst_sorted = sorted(RNA_lst)
+
     # Copy to new directories
-    copy_files_new_dir(DNA_lst, "DNA")
-    copy_files_new_dir(RNA_lst, "RNA")
+    copy_files_new_dir(DNA_lst_sorted, "DNA")
+    copy_files_new_dir(RNA_lst_sorted, "RNA")
 
 
 ###############
@@ -111,3 +118,4 @@ if __name__ == '__main__':
     start_time = time.time()
     main()
     print(f'Finished sort_files.py in {round(time.time() - start_time, 2)} sec.')
+
