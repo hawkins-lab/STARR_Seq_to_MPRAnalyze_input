@@ -1,1 +1,1 @@
-# STARR_Seq_to_MPRAnalyze
+# STARR Seq to MPRAnalyze input
