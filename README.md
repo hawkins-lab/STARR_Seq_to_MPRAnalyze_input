@@ -22,10 +22,10 @@ git clone https://github.com/hawkins-lab/STARR_Seq_to_MPRAnalyze_input.git \
 1. Navigate to the STARR_Seq_to_MPRAnalyze_input directory.
 2. Add any Starr Seq files into the **pipeline_input** directory. These should be .fasta.gz files. 
 3. Submit a job to the computation cluster with the **run_pipeline.sh** script.
-4. Wait ~8 hours for the data to be processed
+4. Wait ~12 hours for the data to be processed
 5. Check pipeline_output/13_final_mpranalyze_input/ directory for the MPRAnalyze input .csv files.
 
 Just a few notes for reference:
 - We run all heavy computational processes on University of Washington's Genome Sciences cluster computing.
-
-
+- Arpit has notified me that the first steps of processing the fastq.gz files may have different barcode lengths. If that is the case, you might need to modify the numbers (i.e. cutadapt  -j 0 -u 50 -u -40 might be different than what is written here).
+ 
