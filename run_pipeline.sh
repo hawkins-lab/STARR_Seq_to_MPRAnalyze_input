@@ -2,7 +2,7 @@
 #$ -cwd
 #$ -o "job.stdout"
 #$ -e "job.stderr"
-#$ -l m_mem_free=10.0G
+#$ -l m_mem_free=40.0G
 #$ -R y
 #$ -l h_rt=24:0:0
 
