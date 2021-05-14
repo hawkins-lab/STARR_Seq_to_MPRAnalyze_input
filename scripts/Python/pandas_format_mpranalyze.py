@@ -10,12 +10,13 @@ import numpy as np
 
 """
 This script is to process the files output from the pipeline.sh script.
--Input: 09_UMI_group directory
+-Input: 12_UMI_group directory
 -Output: .csv file containing DNA and RNA counts
 
 I UNDERSTAND THAT MANY OF THESE FUNCTIONS ARE INEFFICIENT AND WORDY
 IF THERE'S A BETTER WAY, PLEASE LET ME KNOW!
 """
+
 
 # Parser Commands # ------------------------------------------------------------------------
 parser = argparse.ArgumentParser(description='Inputs/Output for processing UMI files.')
@@ -52,82 +53,27 @@ def add_rep_df(df, val, idx):
 
 
 def manipulate_pd_dfs(df, nt_type):
-    df2 = None
-    dna_lst = ["rsID_UMI", "DNArep1", "DNArep2", "DNArep3", "DNArep4", "DNArep5",
-               "DNArep6", "DNArep7", "DNArep8", "DNArep9", "DNArep10"]
-    rna_lst = ["rsID_UMI", "RNArep1", "RNArep2", "RNArep3", "RNArep4", "RNArep5",
-               "RNArep6", "RNArep7", "RNArep8", "RNArep9", "RNArep10"]
+    
+    num_columns = int((len(df.columns) - 1) / 2 + 1)
 
-    # Assuming that dataframe will have even number of DNA and RNA columns
-    num_columns = int((len(df.columns) - 1) / 2) + 1
-
+    dna_lst = [f"DNArep{i}" for i in range(1,num_columns)]
+    dna_lst.insert(0,"rsID_UMI")
+    rna_lst = [f"RNArep{i}" for i in range(1,num_columns)]
+    rna_lst.insert(0,"rsID_UMI")
+    
     # Split dataframe into RNA or DNA
     if nt_type == 'DNA':
         df2 = df[dna_lst[0:num_columns]]
     elif nt_type == 'RNA':
         df2 = df[rna_lst[0:num_columns]]
-
-    # Replicate
-    rep1, rep2, rep3, rep4, rep5, rep6, rep7, rep8, rep9, rep10 = \
-        None, None, None, None, None, None, None, None, None, None
-
+    
     # Each replicate has own dataframe
-    for idx in range(0, num_columns - 1):
-        if idx == 0:
-            rep1 = df2[["rsID_UMI", f"{nt_type}rep1"]]
-        elif idx == 1:
-            rep2 = df2[["rsID_UMI", f"{nt_type}rep2"]]
-        elif idx == 2:
-            rep3 = df2[["rsID_UMI", f"{nt_type}rep3"]]
-        elif idx == 3:
-            rep4 = df2[["rsID_UMI", f"{nt_type}rep4"]]
-        elif idx == 4:
-            rep5 = df2[["rsID_UMI", f"{nt_type}rep5"]]
-        elif idx == 5:
-            rep6 = df2[["rsID_UMI", f"{nt_type}rep6"]]
-        elif idx == 6:
-            rep7 = df2[["rsID_UMI", f"{nt_type}rep7"]]
-        elif idx == 7:
-            rep8 = df2[["rsID_UMI", f"{nt_type}rep8"]]
-        elif idx == 8:
-            rep9 = df2[["rsID_UMI", f"{nt_type}rep9"]]
-        elif idx == 9:
-            rep10 = df2[["rsID_UMI", f"{nt_type}rep10"]]
-
-    # Added a column with rep1 rep2 or rep3 for identification
-    try: rep1 = add_rep_df(rep1, 1, 2)
-    except: pass
-
-    try: rep2 = add_rep_df(rep2, 2, 2)
-    except: pass
-
-    try: rep3 = add_rep_df(rep3, 3, 2)
-    except: pass
-
-    try: rep4 = add_rep_df(rep4, 4, 2)
-    except: pass
-
-    try: rep5 = add_rep_df(rep5, 5, 2)
-    except: pass
-
-    try: rep6 = add_rep_df(rep6, 6, 2)
-    except: pass
-
-    try: rep7 = add_rep_df(rep7, 7, 2)
-    except: pass
-
-    try: rep8 = add_rep_df(rep8, 8, 2)
-    except: pass
-
-    try: rep9 = add_rep_df(rep9, 9, 2)
-    except: pass
-
-    try: rep10 = add_rep_df(rep10, 10, 2)
-    except: pass
-
-    # Total list
-    # Create merged count_all dataframe
-    count_all_lst = [rep for rep in [rep1, rep2, rep3, rep4, rep5, rep6, rep7,  rep8, rep9, rep10] if rep is not None]
+    count_all_lst = []
+    for idx in range(1, num_columns):
+        rep = df2[["rsID_UMI", f"{nt_type}rep{idx}"]]
+        rep = add_rep_df(rep, idx, 2)
+        count_all_lst.append(rep)
+       
 
     count_all_df = pd.concat(count_all_lst).reset_index(drop=True)
     count_all_df[["rsID", "barcode"]] = count_all_df.rsID_UMI.str.split(":", expand=True)
@@ -187,3 +133,7 @@ if __name__ == '__main__':
     start_time = time.time()
     main()
     print(f'Finished pandas_format_mpranalyze.py in {round(time.time() - start_time, 2)} sec.')
+
+
+
+
