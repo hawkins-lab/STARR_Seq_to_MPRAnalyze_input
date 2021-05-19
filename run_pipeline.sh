@@ -2,7 +2,7 @@
 #$ -cwd
 #$ -o "job.stdout"
 #$ -e "job.stderr"
-#$ -l m_mem_free=10.0G
+#$ -l m_mem_free=40.0G
 #$ -R y
 #$ -l h_rt=24:0:0
 
@@ -16,7 +16,7 @@ bash scripts/Shell/make_dir.sh pipeline_output
 python3 scripts/Python/sort_files.py -d pipeline_input -o pipeline_output -s scripts
 
 # Sleep
-sleep 8h
+sleep 12h
 
 # Continue with jupyter notebook portion of the data processing
 python3 scripts/Python/pandas_processing.py -d pipeline_output/09_UMI_group -o pipeline_output/12_pandas_processed
