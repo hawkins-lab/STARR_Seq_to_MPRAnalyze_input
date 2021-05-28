@@ -1,9 +1,0 @@
-[bwa_index] Pack FASTA... 0.02 sec
-[bwa_index] Construct BWT for the packed sequence...
-[bwa_index] 0.69 seconds elapse.
-[bwa_index] Update BWT... 0.02 sec
-[bwa_index] Pack forward-only FASTA... 0.02 sec
-[bwa_index] Construct SA from BWT and Occ... 0.37 sec
-[main] Version: 0.7.15-r1140
-[main] CMD: bwa index -p aid_bwaindex aid_snipa.fasta
-[main] Real time: 1.348 sec; CPU: 1.124 sec

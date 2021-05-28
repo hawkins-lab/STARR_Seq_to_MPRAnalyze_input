@@ -53,7 +53,7 @@ def add_rep_df(df, val, idx):
 
 
 def manipulate_pd_dfs(df, nt_type):
-    
+    # of samples
     num_columns = int((len(df.columns) - 1) / 2 + 1)
 
     dna_lst = [f"DNArep{i}" for i in range(1,num_columns)]
