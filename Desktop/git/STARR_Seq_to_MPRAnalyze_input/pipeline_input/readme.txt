@@ -1,1 +1,0 @@
-Add input *.fastq.gz here!
