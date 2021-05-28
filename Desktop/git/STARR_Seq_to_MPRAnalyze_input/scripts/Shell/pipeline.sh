@@ -2,7 +2,7 @@
 #$ -cwd
 #$ -o "job.stdout"
 #$ -e "job.stderr"
-#$ -l m_mem_free=5.0G
+#$ -l m_mem_free=50G
 #$ -R y
 #$ -l h_rt=32:0:0
 
@@ -12,13 +12,13 @@ counter=$3
 filename=$4
 
 # Go to this working directory, change as need
-cd /net/hawkins/vol1/home/{$USER}/STARR_Seq_to_MPRAnalyze
+cd /net/hawkins/vol1/home/${USER}/STARR_Seq_to_MPRAnalyze_input
 conda activate STARRSeq2MPRAnalyze_env
 
-mkdir ${output_dir}/02_trimmed_files/${nt_type}_${counter}
-mkdir ${output_dir}/03_pandaseq_files/${nt_type}_${counter}
-mkdir ${output_dir}/04_cutadapt_files/${nt_type}_${counter}
-mkdir ${output_dir}/05_umi_extract/${nt_type}_${counter}
+mkdir -p ${output_dir}/02_trimmed_files/${nt_type}_${counter}
+mkdir -p ${output_dir}/03_pandaseq_files/${nt_type}_${counter}
+mkdir -p ${output_dir}/04_cutadapt_files/${nt_type}_${counter}
+mkdir -p ${output_dir}/05_umi_extract/${nt_type}_${counter}
 
 
 # Takes long time (30 minutes)
@@ -41,7 +41,7 @@ umi_tools extract --extract-method=regex --stdin=${output_dir}/04_cutadapt_files
 # snakemake_STARRSeq2MPRAnalyze
 conda deactivate
 conda activate STARRSeq2MPRAnalyze_env
-bwa mem -t 4 bwa_index_aid/aid_bwaindex ${output_dir}/05_umi_extract/${nt_type}_${counter}/${filename}_UMI.fastq.gz > ${output_dir}/06_bwa_align/${filename}_UMI_bwa.err > ${output_dir}/06_bwa_align/${filename}_UMI.sam
+bwa mem -t 4 ~/STARR_Seq_to_MPRAnalyze_input/bwa_index_aid/aid_snipa.fasta ${output_dir}/05_umi_extract/${nt_type}_${counter}/${filename}_UMI.fastq.gz > ${output_dir}/06_bwa_align/${filename}_UMI_bwa.err > ${output_dir}/06_bwa_align/${filename}_UMI.sam
 
 ##################
 #### SAMTOOLS ####

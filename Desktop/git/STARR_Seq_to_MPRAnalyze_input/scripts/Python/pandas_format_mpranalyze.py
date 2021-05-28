@@ -29,7 +29,7 @@ input_dir = args.directory
 output_dir = args.outputdir
 
 # input_dir = "../../pipeline_output/12_pandas_processed"
-# output_dir = "../../pipeline_output/13_final_mpranalyze_input"
+# output_dir = "../../pipeline_output/13_final_mpranalyze"
 
 
 # START FUNCTIONS # ------------------------------------------------------------------------

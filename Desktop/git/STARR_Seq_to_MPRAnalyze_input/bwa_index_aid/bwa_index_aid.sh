@@ -4,4 +4,5 @@
 
 
 
-bwa index -p aid_bwaindex aid_snipa.fasta
+#bwa index -p aid_bwaindex aid_snipa.fasta
+bwa index aid_snipa.fasta

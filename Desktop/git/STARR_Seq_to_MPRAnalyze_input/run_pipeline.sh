@@ -2,12 +2,12 @@
 #$ -cwd
 #$ -o "job.stdout"
 #$ -e "job.stderr"
-#$ -l m_mem_free=10.0G
+#$ -l m_mem_free=50G
 #$ -R y
 #$ -l h_rt=24:0:0
 
 # Go to this working directory, change as need
-cd /net/hawkins/vol1/home/{$USER}/STARR_Seq_to_MPRAnalyze
+cd /net/hawkins/vol1/home/${USER}/STARR_Seq_to_MPRAnalyze_input
 
 # Make all sub-directories
 bash scripts/Shell/make_dir.sh pipeline_output
@@ -20,7 +20,7 @@ sleep 8h
 
 # Continue with jupyter notebook portion of the data processing
 python3 scripts/Python/pandas_processing.py -d pipeline_output/09_UMI_group -o pipeline_output/12_pandas_processed
-python3 scripts/Python/pandas_format_mpranalyze.py -d pipeline_output/12_pandas_processed -o pipeline_output/13_final_mpranalyze_input
+python3 scripts/Python/pandas_format_mpranalyze.py -d pipeline_output/12_pandas_processed -o pipeline_output/13_pandas_mpranalyze
 
 
 ##### Other R scripts you want to put here for MPRAnalyze

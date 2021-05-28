@@ -37,6 +37,7 @@ output_dir = args.outputdir
 # SORT INTO RNA OR DNA LIST
 def split_to_DNA_RNA(lst):
     RNA_lst, DNA_lst = [], []
+    
     for name in lst:
 
         # Check DNA
@@ -59,28 +60,32 @@ def split_to_DNA_RNA(lst):
 def clean_pd_df(lst, name):
     counter = 1
     lst_clean = []
-    for i in range(0, len(lst) - 1):
+    print(len(lst))
+    for i in range(0, len(lst)):
+        
         df = lst[i]
-        try:
-            df["rsID_UMI"] = df["contig"] + ":" + df["final_umi"]
-            df = df[["contig", "rsID_UMI", "final_umi", "final_umi_count"]]
-            df = df.sort_values(by=["contig"])
-            dfcontig = df["contig"].str.split("_", n=1, expand=True)
-            df["rsID"] = dfcontig[0]
-            df["variant"] = dfcontig[1]
-            df_drop_dup = df.drop_duplicates(subset="rsID_UMI", keep="first")  # drop duplicates
-            df_drop_dup = df_drop_dup.rename({'final_umi_count': f'{name}rep{counter}'}, axis=1)
-        except:
-            df_drop_dup = None
+        print(i)
+        print(df)
+        df["rsID_UMI"] = df["contig"] + ":" + df["final_umi"]
+        df = df[["contig", "rsID_UMI", "final_umi", "final_umi_count"]]
+        df = df.sort_values(by=["contig"])
+        dfcontig = df["contig"].str.split("_", n=1, expand=True)
+        df["rsID"] = dfcontig[0]
+        df["variant"] = dfcontig[1]
+        df_drop_dup = df.drop_duplicates(subset="rsID_UMI", keep="first")  # drop duplicates
+        df_drop_dup = df_drop_dup.rename({'final_umi_count': f'{name}rep{counter}'}, axis=1)
+        print(df_drop_dup)
         counter += 1
         lst_clean.append(df_drop_dup)
-    return lst
+        
+    return lst_clean
 
 # MERGE DNA RNA DFs
 def merge_DNA_RNA(DNA_df, RNA_df):
     DNA_RNA_merged = []
-
+    
     for i in range(0, len(DNA_df)):
+        
         dna_name = DNA_df[i].columns[3]
         rna_name = RNA_df[i].columns[3]
         merged_df = pd.merge(left=DNA_df[i], right=RNA_df[i], how="left", left_on='rsID_UMI', right_on='rsID_UMI')
@@ -99,19 +104,16 @@ def main():
 
     pd_DNA = [pd.read_csv(f"{input_dir}/{name}", delimiter='\t') for name in DNA_lst]
     pd_RNA = [pd.read_csv(f"{input_dir}/{name}", delimiter='\t') for name in RNA_lst]
-
-    n = 10 - len(DNA_lst)
-    pd_DNA += [None] * n
-    pd_RNA += [None] * n
-
+    
+    
     print("OPENED ALL FILES IN PANDAS FOR pandas_processing.py in", round(time.time() - start_time, 2), " sec.")
 
     # Clean DNA dataframes
     DNA_sorted = clean_pd_df(pd_DNA, name="DNA")
-
+   
     # Clean RNA dataframes
     RNA_sorted = clean_pd_df(pd_RNA, name="RNA")
-
+    
     print("CLEANED ALL DNA/RNA DATAFRAMES FOR pandas_processing.py in", round(time.time() - start_time, 2), " sec.")
 
     # Merge the RNA and DNA files
@@ -120,7 +122,7 @@ def main():
     print("FINISHED MERGING ALL DATAFRAMES for pandas_processing.py in ", round(time.time() - start_time, 2), " sec.")
 
     # Merge to single file
-    finaldf = pd.concat(DNA_RNA_merged, axis=1, join='inner')
+    finaldf = pd.concat(merged_DNA_RNA, axis=1, join='inner')
     finaldf = finaldf.loc[:,~finaldf.columns.duplicated()].fillna(0)
 
     # Write to csv
