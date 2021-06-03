@@ -7,7 +7,7 @@
 #$ -l h_rt=24:0:0
 
 # Go to this working directory, change as need
-cd /net/hawkins/vol1/home/chrhsu/proj/STARR_Seq_to_MPRAnalyze
+cd /net/hawkins/vol1/home/{$USER}/STARR_Seq_to_MPRAnalyze
 
 # Make all sub-directories
 bash scripts/Shell/make_dir.sh pipeline_output
